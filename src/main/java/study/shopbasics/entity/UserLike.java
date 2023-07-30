@@ -1,8 +1,10 @@
 package study.shopbasics.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(name = "user_like")
 public class UserLike {
 

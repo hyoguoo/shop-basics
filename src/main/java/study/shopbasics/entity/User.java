@@ -1,10 +1,12 @@
 package study.shopbasics.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 @Table(name = "user")
 public class User {
 

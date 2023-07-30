@@ -1,11 +1,13 @@
 package study.shopbasics.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 @Table(name = "order_info")
 public class OrderInfo {
 
