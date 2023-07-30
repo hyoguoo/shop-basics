@@ -2,11 +2,13 @@ package study.shopbasics.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 @Table(name = "user")
 public class User {
 
@@ -29,4 +31,12 @@ public class User {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public User(String username, String password, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }
