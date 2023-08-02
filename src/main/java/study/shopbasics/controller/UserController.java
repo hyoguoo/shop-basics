@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import study.shopbasics.dto.request.UserSaveRequest;
+import study.shopbasics.dto.request.UserSignInRequest;
 import study.shopbasics.dto.response.UserSaveResponse;
+import study.shopbasics.dto.response.UserSignInResponse;
 import study.shopbasics.service.UserService;
 
 @RequiredArgsConstructor
@@ -20,5 +22,10 @@ public class UserController {
     @PostMapping("/signup")
     public UserSaveResponse signup(@Valid @RequestBody UserSaveRequest userSaveRequest) {
         return this.userService.saveUser(userSaveRequest);
+    }
+
+    @PostMapping("/signin")
+    public UserSignInResponse signin(@Valid @RequestBody UserSignInRequest userSignInRequest) {
+        return this.userService.signin(userSignInRequest);
     }
 }
