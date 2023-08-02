@@ -48,4 +48,15 @@ class UserServiceTest {
         // When, Then
         Assertions.assertThrows(ConstraintViolationException.class, () -> userService.saveUser(userSaveRequest));
     }
+
+    @Test
+    @DisplayName("user save test duplicate email")
+    public void testSaveUserFailDuplicateEmail() {
+        // Given
+        userService.saveUser(new UserSaveRequest("test", "test", "test@email.com"));
+
+        // When, Then
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                userService.saveUser(new UserSaveRequest("test", "test", "test@email.com")));
+    }
 }

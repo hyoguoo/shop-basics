@@ -18,6 +18,13 @@ public class UserService {
 
     @Transactional
     public UserSaveResponse saveUser(@Valid UserSaveRequest userSaveRequest) {
+        if (isDuplicateEmail(userSaveRequest.getEmail())) {
+            throw new IllegalArgumentException("email is already exist.");
+        }
         return UserSaveResponse.of(userRepository.save(userSaveRequest.toEntity()));
+    }
+
+    private boolean isDuplicateEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 }
