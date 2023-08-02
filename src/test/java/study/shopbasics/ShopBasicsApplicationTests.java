@@ -35,7 +35,7 @@ class ShopBasicsApplicationTests {
 
     @Test
     @DisplayName("Spring Data JPA Test")
-    public void testSaveUser() {
+    void testSaveUser() {
         // Given
         User user = new User("test", "test", "test@test.com", LocalDateTime.now(), LocalDateTime.now());
 

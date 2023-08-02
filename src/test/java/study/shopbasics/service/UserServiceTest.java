@@ -23,7 +23,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("user save test success")
-    public void testSaveUserSuccess() {
+    void testSaveUserSuccess() {
         // Given
         String name = "test";
         String password = "test";
@@ -40,7 +40,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("user save test invalid email")
-    public void testSaveUserFail() {
+    void testSaveUserFail() {
         // Given
         String name = "test";
         String password = "test";
@@ -53,7 +53,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("user save test duplicate email")
-    public void testSaveUserFailDuplicateEmail() {
+    void testSaveUserFailDuplicateEmail() {
         // Given
         userService.saveUser(new UserSaveRequest("test", "test", "test@email.com"));
 
@@ -64,7 +64,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("user signin test success")
-    public void testSigninSuccess() {
+    void testSigninSuccess() {
         // Given
         String email = "test@email.com";
         String password = "test";
@@ -79,7 +79,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("user signin test not exist email")
-    public void testSigninFailNotExistEmail() {
+    void testSigninFailNotExistEmail() {
         // Given
         String email = "test@email.com";
         String password = "test";
@@ -92,7 +92,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("user signin test invalid password")
-    public void testSigninFailInvalidPassword() {
+    void testSigninFailInvalidPassword() {
         // Given
         String email = "test@email.com";
         String password = "test";
