@@ -19,12 +19,12 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/signup")
+    @PostMapping("/sign-up")
     public UserSaveResponse signup(@Valid @RequestBody UserSaveRequest userSaveRequest) {
         return this.userService.saveUser(userSaveRequest);
     }
 
-    @PostMapping("/signin")
+    @PostMapping("/sign-in")
     public UserSignInResponse signin(@Valid @RequestBody UserSignInRequest userSignInRequest) {
         return this.userService.signin(userSignInRequest);
     }
