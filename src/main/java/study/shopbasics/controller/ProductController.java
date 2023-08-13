@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import study.shopbasics.dto.request.ProductSaveRequest;
 import study.shopbasics.dto.request.ProductSearchRequest;
+import study.shopbasics.dto.response.ProductFindDetailResponse;
 import study.shopbasics.dto.response.ProductPageResponse;
 import study.shopbasics.dto.response.ProductSaveResponse;
 import study.shopbasics.service.ProductService;
@@ -25,5 +26,10 @@ public class ProductController {
     @GetMapping
     public ProductPageResponse findProductBySearchConditions(@ModelAttribute ProductSearchRequest productSearchRequest, Pageable pageable) {
         return this.productService.findProductBySearchConditions(productSearchRequest, pageable);
+    }
+
+    @GetMapping("/{id}")
+    public ProductFindDetailResponse findProductById(@PathVariable Long id) {
+        return this.productService.findProductById(id);
     }
 }

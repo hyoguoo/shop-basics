@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import study.shopbasics.dto.request.ProductSaveRequest;
 import study.shopbasics.dto.request.ProductSearchRequest;
+import study.shopbasics.dto.response.ProductFindDetailResponse;
 import study.shopbasics.dto.response.ProductPageResponse;
 import study.shopbasics.dto.response.ProductResponse;
 import study.shopbasics.dto.response.ProductSaveResponse;
@@ -116,6 +117,25 @@ class ProductServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("product find by id test")
+    void testFindProductById() {
+        // Given
+        ProductSaveRequest productSaveRequest = createProductSaveRequest(VALID_PRICE, STOCK_QUANTITY);
+        ProductSaveResponse productSaveResponse = productService.saveProduct(productSaveRequest);
+
+        // When
+        ProductFindDetailResponse productResponse = productService.findProductById(productSaveResponse.getId());
+
+        // Then
+        assertAll(
+                () -> assertEquals(productResponse.getName(), NAME)
+                , () -> assertEquals(productResponse.getDescription(), DESCRIPTION)
+                , () -> assertEquals(productResponse.getPrice(), VALID_PRICE)
+                , () -> assertEquals(productResponse.getImageUrl(), IMAGE_URL)
+                , () -> assertEquals(productResponse.getStock(), STOCK_QUANTITY)
+                , () -> assertEquals(productResponse.getId(), productSaveResponse.getId()));
+    }
 
     private ProductSaveRequest createProductSaveRequest(BigDecimal price, Integer stock) {
         return new ProductSaveRequest(NAME, price, DESCRIPTION, IMAGE_URL, stock);

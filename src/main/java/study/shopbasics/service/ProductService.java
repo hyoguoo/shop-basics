@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import study.shopbasics.dto.request.ProductSaveRequest;
 import study.shopbasics.dto.request.ProductSearchRequest;
+import study.shopbasics.dto.response.ProductFindDetailResponse;
 import study.shopbasics.dto.response.ProductPageResponse;
 import study.shopbasics.dto.response.ProductSaveResponse;
 import study.shopbasics.entity.Product;
@@ -35,5 +36,10 @@ public class ProductService {
     public ProductPageResponse findProductBySearchConditions(ProductSearchRequest productSearchRequest, Pageable pageable) {
         Page<Product> pageProduct = productRepository.findWithSearchKeyword(productSearchRequest.getSearchKeyword(), pageable);
         return ProductPageResponse.of(pageProduct);
+    }
+
+    public ProductFindDetailResponse findProductById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return ProductFindDetailResponse.of(product);
     }
 }
