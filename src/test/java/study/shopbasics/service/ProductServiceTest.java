@@ -5,8 +5,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import study.shopbasics.dto.request.ProductSaveRequest;
+import study.shopbasics.dto.request.ProductSearchRequest;
+import study.shopbasics.dto.response.ProductPageResponse;
+import study.shopbasics.dto.response.ProductResponse;
 import study.shopbasics.dto.response.ProductSaveResponse;
 
 import java.math.BigDecimal;
@@ -17,10 +22,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class ProductServiceTest {
 
-    private static final String NAME = "test";
+    private static final String NAME = "name test";
     private static final BigDecimal VALID_PRICE = BigDecimal.valueOf(1000);
     private static final BigDecimal INVALID_PRICE = BigDecimal.valueOf(-1000);
-    private static final String DESCRIPTION = "test";
+    private static final String DESCRIPTION = "descriptions";
     private static final String IMAGE_URL = "/test-image-url";
     private static final Integer STOCK_QUANTITY = 100;
     private static final Integer INVALID_STOCK_QUANTITY = -100;
@@ -70,6 +75,47 @@ class ProductServiceTest {
         // When, Then
         assertThrows(IllegalArgumentException.class, () -> productService.saveProduct(productSaveRequest));
     }
+
+    @Test
+    @DisplayName("product find by search keyword test")
+    void testFindProductBySearchKeyword() {
+        // Given
+        ProductSaveRequest productSaveRequest = createProductSaveRequest(VALID_PRICE, STOCK_QUANTITY);
+        Pageable pageable = PageRequest.of(0, 20);
+        productService.saveProduct(productSaveRequest);
+
+        // When
+        ProductSearchRequest productSearchRequest = new ProductSearchRequest(NAME);
+        ProductPageResponse productBySearchConditions = productService.findProductBySearchConditions(productSearchRequest, pageable);
+
+        // Then
+        ProductResponse productResponse = productBySearchConditions.getItems().get(0);
+        assertAll(
+                () -> assertEquals(productResponse.getName(), NAME)
+                , () -> assertEquals(productResponse.getDescription(), DESCRIPTION)
+                , () -> assertEquals(productResponse.getPrice(), VALID_PRICE)
+                , () -> assertEquals(productResponse.getImageUrl(), IMAGE_URL)
+                , () -> assertEquals(productResponse.getStock(), STOCK_QUANTITY));
+    }
+
+    @Test
+    @DisplayName("product find by not exist search keyword test")
+    void testFindProductBySearchKeywordFail() {
+        // Given
+        ProductSaveRequest productSaveRequest = createProductSaveRequest(VALID_PRICE, STOCK_QUANTITY);
+        Pageable pageable = PageRequest.of(0, 20);
+        productService.saveProduct(productSaveRequest);
+
+        // When
+        ProductSearchRequest productSearchRequest = new ProductSearchRequest("not exist name");
+        ProductPageResponse productBySearchConditions = productService.findProductBySearchConditions(productSearchRequest, pageable);
+
+        // Then
+        assertAll(
+                () -> assertEquals(productBySearchConditions.getItems().size(), 0)
+        );
+    }
+
 
     private ProductSaveRequest createProductSaveRequest(BigDecimal price, Integer stock) {
         return new ProductSaveRequest(NAME, price, DESCRIPTION, IMAGE_URL, stock);
