@@ -5,7 +5,7 @@ import study.shopbasics.entity.Product;
 
 import java.util.Optional;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
 
     Optional<Product> findByNameAndDescription(String name, String description);
 }
