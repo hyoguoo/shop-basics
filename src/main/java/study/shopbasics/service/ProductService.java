@@ -14,6 +14,8 @@ import study.shopbasics.dto.response.ProductSaveResponse;
 import study.shopbasics.entity.Product;
 import study.shopbasics.repository.ProductRepository;
 
+import java.util.List;
+
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -41,5 +43,9 @@ public class ProductService {
     public ProductFindDetailResponse findProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return ProductFindDetailResponse.of(product);
+    }
+
+    public List<Product> findListById(List<Long> idList) {
+        return productRepository.findByIdIn(idList);
     }
 }
