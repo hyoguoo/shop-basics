@@ -43,6 +43,13 @@ public class OrderInfo {
     @Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate;
 
+    public void addOrderProducts(List<OrderProduct> orderProducts) {
+        for (OrderProduct orderProduct : orderProducts) {
+            this.orderProducts.add(orderProduct);
+            orderProduct.setOrderInfo(this);
+        }
+    }
+
     private static String getUniqueOrderNumber() {
         return UUID.randomUUID().toString();
     }

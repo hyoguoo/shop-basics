@@ -29,4 +29,8 @@ public class OrderProduct {
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+
+    public void setOrderInfo(OrderInfo orderInfo) {
+        this.orderInfo = orderInfo;
+    }
 }
