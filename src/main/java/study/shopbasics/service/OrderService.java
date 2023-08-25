@@ -36,25 +36,15 @@ public class OrderService {
     }
 
     private List<OrderProduct> getOrderProducts(List<OrderSaveRequestProductDetail> orderSaveRequestProductDetails) {
-        List<Product> productList = getProductList(orderSaveRequestProductDetails);
-
         return orderSaveRequestProductDetails
                 .stream()
-                .map(orderSaveRequestProductDetail ->
-                        orderSaveRequestProductDetail.toEntity(
-                                productList
-                                        .stream()
-                                        .filter(p -> p.getId().equals(orderSaveRequestProductDetail.getProductId()))
-                                        .findFirst()
-                                        .orElseThrow(IllegalArgumentException::new)))
+                .map(this::processOrderProduct)
                 .toList();
     }
 
-    private List<Product> getProductList(List<OrderSaveRequestProductDetail> orderSaveRequestProductDetails) {
-        List<Long> productIdList = orderSaveRequestProductDetails.stream()
-                .map(OrderSaveRequestProductDetail::getProductId)
-                .toList();
+    private OrderProduct processOrderProduct(OrderSaveRequestProductDetail orderSaveRequestProductDetail) {
+        Product product = productService.reduceProductStock(orderSaveRequestProductDetail.getProductId(), orderSaveRequestProductDetail.getQuantity());
 
-        return productService.findListById(productIdList);
+        return orderSaveRequestProductDetail.toEntity(product);
     }
 }

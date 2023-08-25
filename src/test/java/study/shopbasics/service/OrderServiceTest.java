@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
@@ -30,6 +31,7 @@ class OrderServiceTest {
 
     private final static int PRICE1 = 1000;
     private final static int PRICE2 = 2000;
+    private final static int STOCK_QUANTITY = 59;
     private static UserSaveResponse user;
     private static ProductSaveResponse product1;
     private static ProductSaveResponse product2;
@@ -51,8 +53,8 @@ class OrderServiceTest {
         UserSaveRequest userSaveRequest = new UserSaveRequest("test", "test", "test@email.com");
         user = userService.saveUser(userSaveRequest);
         // Create product
-        ProductSaveRequest productSaveRequest1 = new ProductSaveRequest("name1", BigDecimal.valueOf(PRICE1), "description1", "image_url1", 59);
-        ProductSaveRequest productSaveRequest2 = new ProductSaveRequest("name2", BigDecimal.valueOf(PRICE2), "description2", "image_url2", 59);
+        ProductSaveRequest productSaveRequest1 = new ProductSaveRequest("name1", BigDecimal.valueOf(PRICE1), "description1", "image_url1", STOCK_QUANTITY);
+        ProductSaveRequest productSaveRequest2 = new ProductSaveRequest("name2", BigDecimal.valueOf(PRICE2), "description2", "image_url2", STOCK_QUANTITY);
         product1 = productService.saveProduct(productSaveRequest1);
         product2 = productService.saveProduct(productSaveRequest2);
     }
@@ -86,5 +88,21 @@ class OrderServiceTest {
                 () -> assertThat(orderProducts.get(1).getProduct().getId()).isEqualTo(product2.getId()),
                 () -> assertThat(orderProducts.get(1).getQuantity()).isEqualTo(QUANTITY2)
         );
+    }
+
+    @Test
+    @DisplayName("order save test over stock")
+    void testSaveOrderFailInvalidQuantity() {
+        // Given
+        final int QUANTITY1 = STOCK_QUANTITY + 1;
+        final int QUANTITY2 = 3;
+        OrderSaveRequestProductDetail[] orderSaveRequestProductDetails = new OrderSaveRequestProductDetail[]{
+                new OrderSaveRequestProductDetail(product1.getId(), QUANTITY1),
+                new OrderSaveRequestProductDetail(product2.getId(), QUANTITY2)
+        };
+        OrderSaveRequest orderSaveRequest = new OrderSaveRequest(user.getId(), orderSaveRequestProductDetails, BigDecimal.valueOf(PRICE1 * QUANTITY1 + PRICE2 * QUANTITY2));
+
+        // When, Then
+        assertThrows(IllegalArgumentException.class, () -> orderService.saveOrder(orderSaveRequest));
     }
 }
