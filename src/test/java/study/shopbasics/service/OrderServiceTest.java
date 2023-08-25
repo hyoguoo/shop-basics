@@ -105,4 +105,20 @@ class OrderServiceTest {
         // When, Then
         assertThrows(IllegalArgumentException.class, () -> orderService.saveOrder(orderSaveRequest));
     }
+
+    @Test
+    @DisplayName("order save test invalid total amount")
+    void testSaveOrderFailInvalidTotalAmount() {
+        // Given
+        final int QUANTITY1 = 2;
+        final int QUANTITY2 = 3;
+        OrderSaveRequestProductDetail[] orderSaveRequestProductDetails = new OrderSaveRequestProductDetail[]{
+                new OrderSaveRequestProductDetail(product1.getId(), QUANTITY1),
+                new OrderSaveRequestProductDetail(product2.getId(), QUANTITY2)
+        };
+        OrderSaveRequest orderSaveRequest = new OrderSaveRequest(user.getId(), orderSaveRequestProductDetails, BigDecimal.valueOf(PRICE1 * QUANTITY1 + PRICE2 * QUANTITY2 + 1));
+
+        // When, Then
+        assertThrows(IllegalArgumentException.class, () -> orderService.saveOrder(orderSaveRequest));
+    }
 }

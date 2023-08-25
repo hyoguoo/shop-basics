@@ -14,6 +14,7 @@ import study.shopbasics.entity.Product;
 import study.shopbasics.entity.User;
 import study.shopbasics.repository.OrderInfoRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -29,6 +30,7 @@ public class OrderService {
     public OrderSaveResponse saveOrder(@Valid OrderSaveRequest orderSaveRequest) {
         User requestUser = userService.findById(orderSaveRequest.getUserId());
         List<OrderProduct> orderProducts = getOrderProducts(orderSaveRequest.getProductDetailAsList());
+        this.validateTotalAmount(orderSaveRequest.getTotalAmount(), orderProducts);
 
         OrderInfo orderInfo = orderSaveRequest.toEntity(requestUser, orderProducts);
 
@@ -46,5 +48,15 @@ public class OrderService {
         Product product = productService.reduceProductStock(orderSaveRequestProductDetail.getProductId(), orderSaveRequestProductDetail.getQuantity());
 
         return orderSaveRequestProductDetail.toEntity(product);
+    }
+
+    private void validateTotalAmount(BigDecimal totalAmount, List<OrderProduct> orderProducts) {
+        int sum = orderProducts.stream()
+                .mapToInt(orderProduct -> orderProduct.getProduct().getPrice().intValue() * orderProduct.getQuantity())
+                .sum();
+
+        if (totalAmount.intValue() != sum) {
+            throw new IllegalArgumentException("total amount is not correct.");
+        }
     }
 }
