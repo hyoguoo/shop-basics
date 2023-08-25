@@ -20,6 +20,9 @@ public class OrderInfo {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @OneToMany(mappedBy = "orderInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<OrderProduct> orderProducts = new ArrayList<>();
+
     @Column(name = "order_number", nullable = false)
     private String orderNumber;
 
