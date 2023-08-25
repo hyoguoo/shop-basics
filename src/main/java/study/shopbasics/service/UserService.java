@@ -46,4 +46,9 @@ public class UserService {
     private boolean validatePassword(String requestPassword, String userPassword) {
         return requestPassword.equals(userPassword);
     }
+
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("user is not valid."));
+    }
 }
