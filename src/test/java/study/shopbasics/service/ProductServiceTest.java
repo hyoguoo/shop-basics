@@ -14,6 +14,7 @@ import study.shopbasics.dto.response.ProductFindDetailResponse;
 import study.shopbasics.dto.response.ProductPageResponse;
 import study.shopbasics.dto.response.ProductResponse;
 import study.shopbasics.dto.response.ProductSaveResponse;
+import study.shopbasics.entity.Product;
 
 import java.math.BigDecimal;
 
@@ -135,6 +136,35 @@ class ProductServiceTest {
                 , () -> assertEquals(productResponse.getImageUrl(), IMAGE_URL)
                 , () -> assertEquals(productResponse.getStock(), STOCK_QUANTITY)
                 , () -> assertEquals(productResponse.getId(), productSaveResponse.getId()));
+    }
+
+    @Test
+    @DisplayName("product reduce stock test")
+    void testReduceProductStock() {
+        // Given
+        final int REDUCE_STOCK = 10;
+        ProductSaveRequest productSaveRequest = createProductSaveRequest(VALID_PRICE, STOCK_QUANTITY);
+        ProductSaveResponse productSaveResponse = productService.saveProduct(productSaveRequest);
+
+        // When
+        Product product = productService.reduceProductStock(productSaveResponse.getId(), REDUCE_STOCK);
+
+        // Then
+        assertAll(
+                () -> assertEquals(product.getStock(), Integer.valueOf(STOCK_QUANTITY - REDUCE_STOCK))
+        );
+    }
+
+    @Test
+    @DisplayName("product reduce stock test invalid stock")
+    void testReduceProductStockFailInvalidStock() {
+        // Given
+        final int REDUCE_STOCK = 1000;
+        ProductSaveRequest productSaveRequest = createProductSaveRequest(VALID_PRICE, STOCK_QUANTITY);
+        ProductSaveResponse productSaveResponse = productService.saveProduct(productSaveRequest);
+
+        // When, Then
+        assertThrows(IllegalArgumentException.class, () -> productService.reduceProductStock(productSaveResponse.getId(), REDUCE_STOCK));
     }
 
     private ProductSaveRequest createProductSaveRequest(BigDecimal price, Integer stock) {

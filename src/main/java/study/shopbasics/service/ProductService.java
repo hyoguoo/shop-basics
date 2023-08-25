@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import study.shopbasics.dto.request.ProductSaveRequest;
 import study.shopbasics.dto.request.ProductSearchRequest;
@@ -41,5 +42,18 @@ public class ProductService {
     public ProductFindDetailResponse findProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return ProductFindDetailResponse.of(product);
+    }
+
+    @Transactional
+    public Product reduceProductStock(Long productId, Integer reduceStock) {
+        Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+
+        if (product.getStock() < reduceStock) {
+            throw new IllegalArgumentException("product stock is not enough.");
+        }
+
+        product.reduceStock(reduceStock);
+
+        return product;
     }
 }

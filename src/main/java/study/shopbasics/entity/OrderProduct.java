@@ -1,10 +1,16 @@
 package study.shopbasics.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "order_product")
 public class OrderProduct {
 
@@ -23,4 +29,8 @@ public class OrderProduct {
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+
+    public void setOrderInfo(OrderInfo orderInfo) {
+        this.orderInfo = orderInfo;
+    }
 }
