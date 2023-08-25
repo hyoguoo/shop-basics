@@ -78,11 +78,11 @@ class OrderServiceTest {
         // Then
         OrderInfo orderInfo = orderInfoRepository.findById(orderSaveResponse.getId()).orElseThrow(IllegalArgumentException::new);
         List<OrderProduct> orderProducts = orderInfo.getOrderProducts();
+        assertThat(orderProducts).hasSize(2);
         assertAll(
                 () -> assertThat(orderInfo.getUser().getId()).isEqualTo(user.getId()),
                 () -> assertThat(orderInfo.getTotalAmount()).isEqualByComparingTo(BigDecimal.valueOf(PRICE1 * QUANTITY1 + PRICE2 * QUANTITY2)),
                 () -> assertThat(orderProducts).isNotNull(),
-                () -> assertThat(orderProducts).hasSize(2),
                 () -> assertThat(orderProducts.get(0).getProduct().getId()).isEqualTo(product1.getId()),
                 () -> assertThat(orderProducts.get(0).getQuantity()).isEqualTo(QUANTITY1),
                 () -> assertThat(orderProducts.get(1).getProduct().getId()).isEqualTo(product2.getId()),
