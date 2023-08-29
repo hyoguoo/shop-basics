@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "user_like")
+@Table(name = "user_like", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
 public class UserLike {
 
     @Id
