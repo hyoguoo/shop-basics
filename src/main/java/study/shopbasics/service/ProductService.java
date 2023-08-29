@@ -39,14 +39,19 @@ public class ProductService {
         return ProductPageResponse.of(pageProduct);
     }
 
+    public Product findById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
     public ProductFindDetailResponse findProductById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Product product = findById(id);
         return ProductFindDetailResponse.of(product);
     }
 
     @Transactional
     public Product reduceProductStock(Long productId, Integer reduceStock) {
-        Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+        Product product = findById(productId);
 
         if (product.getStock() < reduceStock) {
             throw new IllegalArgumentException("product stock is not enough.");
