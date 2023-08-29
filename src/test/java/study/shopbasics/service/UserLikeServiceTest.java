@@ -16,6 +16,7 @@ import study.shopbasics.entity.UserLike;
 import study.shopbasics.repository.UserLikeRepository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -62,6 +63,27 @@ class UserLikeServiceTest {
                 () -> assertEquals(userLike.getUser().getId(), userId),
                 () -> assertEquals(userLike.getProduct().getId(), productId)
         );
+    }
+
+    @Test
+    @DisplayName("user like save test already exist")
+    void testSaveUserLikeAlreadyExist() {
+        // Given
+        Long userId = user.getId();
+        Long productId = product.getId();
+        userLikeService.saveUserLike(new UserLikeRequest(userId, productId));
+        entityManager.clear();
+
+        // When
+        userLikeService.saveUserLike(new UserLikeRequest(userId, productId));
+
+        // Then
+        List<UserLike> userLikeList = userLikeRepository.findAll();
+        List<UserLike> filteredUserLikeList = userLikeList.stream()
+                .filter(userLike -> userLike.getUser().getId().equals(userId) && userLike.getProduct().getId().equals(productId))
+                .toList();
+
+        assertEquals(1, filteredUserLikeList.size());
     }
 
     @Test

@@ -22,7 +22,9 @@ public class UserLikeService {
         User requestUser = userService.findById(userLikeRequest.getUserId());
         Product findProduct = productService.findById(userLikeRequest.getProductId());
 
-        userLikeRepository.save(userLikeRequest.toEntity(requestUser, findProduct));
+        if (userLikeRepository.findByUserIdAndProductId(userLikeRequest.getUserId(), userLikeRequest.getProductId()).isEmpty()) {
+            userLikeRepository.save(userLikeRequest.toEntity(requestUser, findProduct));
+        }
     }
 
     public void deleteUserLike(@Valid UserLikeRequest userLikeRequest) {
