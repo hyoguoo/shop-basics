@@ -1,11 +1,17 @@
 package study.shopbasics.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "user_like")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "user_like", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
 public class UserLike {
 
     @Id
